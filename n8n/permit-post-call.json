@@ -1,0 +1,281 @@
+{
+  "name": "Example Permit Co. Post Call Analysis",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "YOUR_WEBHOOK_PATH",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "0eb3c8cf-bc28-4f1e-9a5e-9f43d6e06270",
+      "name": "Webhook"
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "YOUR_SLACK_CHANNEL_ID",
+          "mode": "list"
+        },
+        "text": "=Just finished a call with {{ $json['Full Name'] }}. Details:\n\nEmail: {{ $json['Email Address'] }}\nProperty Address: {{ $json['Property Address'] }}\nProject Type: {{ $json['Project Type'] }}\nProject Location: {{ $json['Project Location'] }}\nTimeline: {{ $json.Timeline }}\nRole: {{ $json['Role '] }}\nUrgency Level: {{ $json['Urgency Level'] }}",
+        "otherOptions": {
+          "includeLinkToWorkflow": false
+        }
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        624,
+        0
+      ],
+      "id": "aa0c10ce-a9bb-47b6-adfa-77ac550a0581",
+      "name": "Notify Team"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEET_ID",
+          "mode": "list"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "YOUR_SHEET_TAB",
+          "mode": "list"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Full Name": "={{ $json.body.call.call_analysis.custom_analysis_data.full_name }}",
+            "Email Address": "={{ $json.body.call.call_analysis.custom_analysis_data.email_address }}",
+            "Property Address": "={{ $json.body.call.call_analysis.custom_analysis_data.property_address }}",
+            "Callback Number": "={{ $json.body.call.call_analysis.custom_analysis_data.call_back_number }}",
+            "Project Type": "={{ $json.body.call.call_analysis.custom_analysis_data.project_type }}",
+            "Project Location": "={{ $json.body.call.call_analysis.custom_analysis_data.project_location }}",
+            "Timeline": "={{ $json.body.call.call_analysis.custom_analysis_data.timeline }}",
+            "Role ": "={{ $json.body.call.call_analysis.custom_analysis_data.role }}",
+            "Urgency Level": "={{ $json.body.call.call_analysis.custom_analysis_data.urgency }}",
+            "Summary": "={{ $json.body.call.call_analysis.call_summary }}",
+            "Transcript": "={{ $('Webhook').item.json.body.call.transcript }}",
+            "Recording URL": "={{ $json.body.call.recording_url }}",
+            "Phone Number": "={{ $json.body.call.from_number }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Full Name",
+              "displayName": "Full Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email Address",
+              "displayName": "Email Address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Phone Number",
+              "displayName": "Phone Number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Property Address",
+              "displayName": "Property Address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Callback Number",
+              "displayName": "Callback Number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Project Type",
+              "displayName": "Project Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Project Location",
+              "displayName": "Project Location",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Timeline",
+              "displayName": "Timeline",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Role ",
+              "displayName": "Role ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Urgency Level",
+              "displayName": "Urgency Level",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Transcript",
+              "displayName": "Transcript",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Recording URL",
+              "displayName": "Recording URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Summary",
+              "displayName": "Summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        416,
+        0
+      ],
+      "id": "73ae308b-edf2-4536-ad01-9c484b007cb5",
+      "name": "Update Call Details"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "8633d709-5ec7-45a2-a23a-cd2b3b89136d",
+              "leftValue": "={{ $json.body.event }}",
+              "rightValue": "call_analyzed",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "cd99f8b3-15c3-4f20-964a-8728469d079f",
+      "name": "Call_Analyzed Filter"
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Call_Analyzed Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Call Details": {
+      "main": [
+        [
+          {
+            "node": "Notify Team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call_Analyzed Filter": {
+      "main": [
+        [
+          {
+            "node": "Update Call Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "active": false,
+  "meta": {}
+}

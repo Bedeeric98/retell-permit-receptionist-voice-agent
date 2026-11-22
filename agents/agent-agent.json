@@ -1,0 +1,111 @@
+{
+  "agent_name": "Example Permit Co.",
+  "engine": "retell-llm",
+  "voice": {
+    "voice_id": "11labs-Grace"
+  },
+  "language": "en-US",
+  "conversation_settings": {
+    "interruption_sensitivity": 0.9,
+    "max_call_duration_ms": 3600000,
+    "stt_mode": "fast",
+    "denoising_mode": "noise-cancellation"
+  },
+  "post_call_analysis_data": [
+    {
+      "type": "string",
+      "name": "full_name",
+      "description": "The full name of the caller"
+    },
+    {
+      "type": "string",
+      "name": "email_address",
+      "description": "The email address of the caller"
+    },
+    {
+      "type": "string",
+      "name": "property_address",
+      "description": "The address of the property the caller wants to get a permit for"
+    },
+    {
+      "type": "string",
+      "name": "call_back_number",
+      "description": "The callback number the caller might provide if the number they are calling from isn't a good one."
+    },
+    {
+      "name": "project_type",
+      "description": "The type of project they want to get a permit for",
+      "type": "string",
+      "examples": []
+    },
+    {
+      "type": "string",
+      "name": "project_location",
+      "description": "The city and county where the project is executed"
+    },
+    {
+      "type": "string",
+      "name": "timeline",
+      "description": "When they are seeking to start the project."
+    },
+    {
+      "name": "role",
+      "description": "Are they the property owner, contractor, investor, or property manager",
+      "type": "enum",
+      "choices": [
+        "property owner",
+        "investor",
+        "contractor",
+        "property manager"
+      ]
+    },
+    {
+      "name": "urgency",
+      "description": "How quickly will they want the permit to be ready",
+      "type": "enum",
+      "choices": [
+        "immediate/urgent",
+        "time-sensitive",
+        "planning/standard"
+      ]
+    }
+  ],
+  "llm": {
+    "model": "gpt-4.1",
+    "model_temperature": 0,
+    "tool_call_strict_mode": null,
+    "begin_message": "Hi, you've reached Example Permit Co. - we help homeowners and contractors get permits approved and code violations resolved quickly. How can I help you today?",
+    "default_dynamic_variables": [],
+    "tools": [
+      {
+        "type": "end_call",
+        "name": "end_call",
+        "description": "End the call when user has to leave (like says bye) or you are instructed to do so."
+      },
+      {
+        "transfer_destination": {
+          "type": "predefined",
+          "number": "+12125550104"
+        },
+        "name": "transfer_to_specialist",
+        "description": "Transfer the call to a human permit specialist",
+        "ignore_e164_validation": false,
+        "transfer_option": {
+          "enable_bridge_audio_cue": true,
+          "type": "warm_transfer",
+          "public_handoff_option": {
+            "type": "prompt",
+            "prompt": ""
+          },
+          "private_handoff_option": {
+            "type": "prompt",
+            "prompt": "Summarize what the user said about their situation, including their name (if they mentioned it)."
+          },
+          "agent_detection_timeout_ms": 20000
+        },
+        "type": "transfer_call"
+      }
+    ]
+  },
+  "webhook": "https://your-n8n-instance.example.com/webhook/YOUR_WEBHOOK_PATH"
+}
